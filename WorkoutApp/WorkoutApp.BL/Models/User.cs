@@ -3,6 +3,7 @@
     /// <summary>
     /// User
     /// </summary>
+    [Serializable]
     internal class User
     {
         #region User properties
