@@ -4,38 +4,70 @@
     /// User
     /// </summary>
     [Serializable]
-    internal class User
+    public class User
     {
         #region User properties
         /// <summary>
-        /// UserID
+        /// User identification number
         /// </summary>
         public int UserID { get; }
+
         /// <summary>
-        /// Name of user
+        /// User's name
         /// </summary>
         public string UserName { get; }
+
         /// <summary>
         /// User's gender
         /// </summary>
-        public Gender Gender { get; }
+        public Gender Gender { get; set; }
+
         /// <summary>
         /// User's birth date
         /// </summary>
-        public DateTime BirthDate { get; }
+        public DateTime BirthDate { get; set; }
+
+        /// <summary>
+        /// User's age calculate property
+        /// </summary>
+        public int UserAge {
+            get {
+                DateTime nowDate = DateTime.Today;
+                int age = nowDate.Year - BirthDate.Year;
+                if (BirthDate > nowDate.AddYears(-age))
+                {
+                    age--;
+                }
+                return age; } 
+        }
+
         /// <summary>
         /// User's weight
         /// </summary>
         public double Weight { get; set; }
+
         /// <summary>
         /// User's height
         /// </summary>
         public double Height { get; set; }
+
         /// <summary>
         /// User's email
         /// </summary>
         public string Email { get; set; }
+
         #endregion
+
+        /// <summary>
+        /// Create new user
+        /// </summary>
+        /// <param name="userName"></param>
+        public User(string userName)
+        {
+            UserName = userName;
+        }
+        
+        
         /// <summary>
         /// Create new user
         /// </summary>
@@ -51,7 +83,7 @@
             DateTime birthDate, 
             double weight, 
             double height, 
-            string email)
+            string email) : this (userName)
         {
             #region Check inputs
             if (string.IsNullOrWhiteSpace(userName)) throw new ArgumentNullException("Name can't be null or empty", nameof(userName));
@@ -72,7 +104,7 @@
 
         public override string ToString()
         {
-            return UserName;
+            return $"{UserName} {UserAge}";
         }
     }
 }

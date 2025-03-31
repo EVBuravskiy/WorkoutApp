@@ -6,7 +6,7 @@ namespace WorkoutApp.BL.Models
     /// Gender
     /// </summary>
     [Serializable]
-    internal class Gender
+    public class Gender
     {
         /// <summary>
         /// GenderID
