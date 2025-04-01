@@ -59,7 +59,8 @@ namespace WorkoutApp.BL.Controllers
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             using (FileStream file = new FileStream("users.dat", FileMode.OpenOrCreate))
             {
-                if (binaryFormatter.Deserialize(file) is List<User> DeserialiseUsers)
+                
+                if (file.Length > 0 && binaryFormatter.Deserialize(file) is List<User> DeserialiseUsers)
                 {
                     return DeserialiseUsers;
                 }
@@ -73,7 +74,7 @@ namespace WorkoutApp.BL.Controllers
         /// </summary>
         /// <returns>bool</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        private bool SaveUser()
+        public bool SaveUser()
         {
             try
             {
