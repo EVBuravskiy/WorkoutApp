@@ -1,12 +1,15 @@
-﻿using System.Runtime.Serialization.Formatters.Binary;
-using WorkoutApp.BL.Models;
+﻿using WorkoutApp.BL.Models;
 namespace WorkoutApp.BL.Controllers
 {
     /// <summary>
     /// Controller for User model
     /// </summary>
-    public class UserController
+    public class UserController : BaseController
     {
+        /// <summary>
+        /// Const string filename for user
+        /// </summary>
+        private const string USER_FILE_NAME = "users.dat";
         /// <summary>
         /// User
         /// </summary>
@@ -46,7 +49,7 @@ namespace WorkoutApp.BL.Controllers
                 Users.Add(CurrentUser);
                 IsNewUser = true;
             }
-            SaveUser();
+            SaveUsers();
         }
 
 
@@ -56,16 +59,7 @@ namespace WorkoutApp.BL.Controllers
         /// <returns>List of users </returns>
         public List<User> GetAllUsersData()
         {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (FileStream file = new FileStream("users.dat", FileMode.OpenOrCreate))
-            {
-                
-                if (file.Length > 0 && binaryFormatter.Deserialize(file) is List<User> DeserialiseUsers)
-                {
-                    return DeserialiseUsers;
-                }
-                return new List<User>();
-            }
+            return LoadItems<User>(USER_FILE_NAME);
         }
 
 
@@ -74,22 +68,9 @@ namespace WorkoutApp.BL.Controllers
         /// </summary>
         /// <returns>bool</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public bool SaveUser()
+        public bool SaveUsers()
         {
-            try
-            {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                using (FileStream file = new FileStream("users.dat", FileMode.OpenOrCreate))
-                {
-                    binaryFormatter.Serialize(file, Users);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return Save(USER_FILE_NAME, Users);
         }
 
         /// <summary>
@@ -108,7 +89,7 @@ namespace WorkoutApp.BL.Controllers
             CurrentUser.Weight = weight;
             CurrentUser.Height = height;
             CurrentUser.Email = email;
-            SaveUser();
+            SaveUsers();
         }
     }
 }
