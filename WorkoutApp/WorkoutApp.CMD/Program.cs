@@ -56,8 +56,8 @@ namespace WorkoutApp.CMD
             Console.Clear();
             Console.WriteLine($"{resourceManager.GetString("HelloUser", culture)}{ userController.CurrentUser}");
             Console.WriteLine(resourceManager.GetString("WhatDo", culture));
-            Console.WriteLine();
             Console.WriteLine($"\t{resourceManager.GetString("EnterMeal", culture)}");
+            Console.WriteLine($"\tA - enter exercise");
             var key = Console.ReadKey();
             Console.Clear();
             if(key.Key == ConsoleKey.E || key.Key == ConsoleKey.T)
@@ -67,7 +67,7 @@ namespace WorkoutApp.CMD
                 var ingestions = ingestionController.GetIngestion();
                 Console.WriteLine(ingestions.User.ToString());
                 Console.WriteLine(ingestions.Moment.ToString());
-                Console.WriteLine(ingestions.FoodstuffsList.First().Key.FoodName);
+                Console.WriteLine(ingestions.FoodstuffsList.First().Key.FoodstuffName);
                 Console.WriteLine(ingestions.FoodstuffsList.First().Key.Calories);
                 foreach(var item in ingestionController.Ingestion.FoodstuffsList)
                 {

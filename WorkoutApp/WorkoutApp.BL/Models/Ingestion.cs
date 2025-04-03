@@ -49,7 +49,7 @@ namespace WorkoutApp.BL.Models
         /// <param name="weight"></param>
         public void AddFoods(Foodstuff foodstuff, double weight)
         {
-            var meal = FoodstuffsList.Keys.FirstOrDefault(food => food.FoodName.Equals(foodstuff.FoodName)); 
+            var meal = FoodstuffsList.Keys.FirstOrDefault(food => food.FoodstuffName.Equals(foodstuff.FoodstuffName)); 
             if (meal == null)
             {
                 FoodstuffsList.Add(foodstuff, weight);

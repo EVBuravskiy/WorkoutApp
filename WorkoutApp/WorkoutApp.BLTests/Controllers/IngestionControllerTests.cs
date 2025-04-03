@@ -31,14 +31,14 @@ namespace WorkoutApp.BL.Controllers.Tests
             Foodstuff element = null;
             foreach(var item in list.Keys)
             {
-                if (item.FoodName.Equals(foodName))
+                if (item.FoodstuffName.Equals(foodName))
                 {
                     element = item;
                     break;
                 }
             }
             //Assert
-            Assert.AreEqual(foodstuff.FoodName, element.FoodName);
+            Assert.AreEqual(foodstuff.FoodstuffName, element.FoodstuffName);
 
         }
     }

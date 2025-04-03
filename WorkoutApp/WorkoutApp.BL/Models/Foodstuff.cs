@@ -9,11 +9,11 @@ namespace WorkoutApp.BL.Models
         /// <summary>
         /// Food identification number
         /// </summary>
-        public int FoodID { get; }
+        public int FoodstuffID { get; }
         /// <summary>
         /// Food name
         /// </summary>
-        public string FoodName { get; }
+        public string FoodstuffName { get; }
         /// <summary>
         /// Proteins in 100 grams of product
         /// </summary>
@@ -39,7 +39,7 @@ namespace WorkoutApp.BL.Models
             {
                 throw new ArgumentNullException("Product name cannot be empty or null", nameof(foodName));
             }
-            FoodName = foodName;
+            FoodstuffName = foodName;
             Proteins = proteins / 100.0;
             Fats = fats / 100.0;
             Carbohydrates = carbohydrates / 100.0;
@@ -49,7 +49,7 @@ namespace WorkoutApp.BL.Models
 
         public override string ToString()
         {
-            return $"Food: {FoodName}";
+            return $"Food: {FoodstuffName}";
         }
     }
 }

@@ -85,7 +85,7 @@ namespace WorkoutApp.BL.Controllers
         /// <param name="weight"></param>
         public void AddFoodstuff(Foodstuff inputFoodstuff, double weight)
         {
-            Foodstuff foodstuff = Foodstuffs.SingleOrDefault(food => food.FoodName.Equals(inputFoodstuff.FoodName));
+            Foodstuff foodstuff = Foodstuffs.SingleOrDefault(food => food.FoodstuffName.Equals(inputFoodstuff.FoodstuffName));
             if(foodstuff == null)
             {
                 Foodstuffs.Add(inputFoodstuff);
