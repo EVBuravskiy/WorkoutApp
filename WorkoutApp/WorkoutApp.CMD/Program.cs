@@ -1,41 +1,66 @@
-﻿using WorkoutApp.BL.Controllers;
+﻿using System.Globalization;
+using System.Resources;
+using System.Text.RegularExpressions;
+using WorkoutApp.BL.Controllers;
 using WorkoutApp.BL.Models;
+
 
 namespace WorkoutApp.CMD
 {
     internal class Program
     {
+        static string cultureChoose;
+        static CultureInfo culture;
+        static ResourceManager resourceManager;
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to Workout Application");
-            Console.Write("Enter your name: ");
+            culture = CultureInfo.CurrentCulture;
+            resourceManager = new ResourceManager("WorkoutApp.CMD.Languages.Messages", typeof(Program).Assembly);
+            Console.WriteLine(resourceManager.GetString("ChangeLanguage", culture));
+            var inputKey = Console.ReadKey();
+            if (inputKey.Key == ConsoleKey.Y)
+            {
+                Console.Clear();
+                Console.WriteLine("For english enter E");
+                Console.WriteLine("Для выбора русского языка введите R");
+                inputKey = Console.ReadKey();
+                if (inputKey.Key == ConsoleKey.E)
+                {
+                    cultureChoose = "en-us";
+                }
+                else
+                {
+                    cultureChoose = "ru-ru";
+                }
+            }
+            Console.Clear();
+            culture = CultureInfo.CreateSpecificCulture(cultureChoose);
+            resourceManager = new ResourceManager("WorkoutApp.CMD.Languages.Messages", typeof(Program).Assembly);
+            Console.WriteLine(resourceManager.GetString("Greating", culture));
+            Console.WriteLine(resourceManager.GetString("EnterName", culture));
             string userName = Console.ReadLine();
             UserController userController = new UserController(userName);
             IngestionController ingestionController = new IngestionController(userController.CurrentUser);
 
             if (userController.IsNewUser)
             {
-                Console.Write("Enter your gender: ");
+                Console.Write(resourceManager.GetString("EnterGender", culture));
                 string gender = Console.ReadLine();
                 DateTime birthDate = ParseDateTime();
-                double weight = ParseDouble("weight");
-                double height = ParseDouble("height");
-                Console.Write("Enter you email: ");
+                double weight = ParseDouble(resourceManager.GetString("Weight", culture));
+                double height = ParseDouble(resourceManager.GetString("Height", culture));
+                Console.Write(resourceManager.GetString("EnterEmail", culture));
                 string email = Console.ReadLine();
                 userController.SetNewUserData(gender, birthDate, weight, height, email);
             }
-            Console.WriteLine($"Hello, { userController.CurrentUser}");
-            //List<User> users = userController.GetAllUsersData();
-            //foreach(var user in users)
-            //{
-            //    Console.WriteLine(user);
-            //}
-
-
-            Console.WriteLine("What you want to do? ");
-            Console.WriteLine("E - enter meal");
+            Console.Clear();
+            Console.WriteLine($"{resourceManager.GetString("HelloUser", culture)}{ userController.CurrentUser}");
+            Console.WriteLine(resourceManager.GetString("WhatDo", culture));
+            Console.WriteLine();
+            Console.WriteLine($"\t{resourceManager.GetString("EnterMeal", culture)}");
             var key = Console.ReadKey();
-            if(key.Key == ConsoleKey.E)
+            Console.Clear();
+            if(key.Key == ConsoleKey.E || key.Key == ConsoleKey.T)
             {
                 var tuplefood = EnterIngestion(userController.CurrentUser);
                 ingestionController.AddFoodstuff(tuplefood.foodstuff, tuplefood.weight);
@@ -61,12 +86,12 @@ namespace WorkoutApp.CMD
         {
             while (true)
             {
-                Console.Write($"Enter {inputName}: ");
+                Console.Write($"{resourceManager.GetString("Enter", culture)} {inputName}: ");
                 if (double.TryParse(Console.ReadLine(), out double result))
                 {
                     return result;
                 }
-                Console.WriteLine($"Wrong format of {inputName}. Please try again");
+                Console.WriteLine($"{Languages.WrongInput.WrongFormat} {inputName}. {Languages.WrongInput.TryAgain}");
             }
         }
         /// <summary>
@@ -77,26 +102,30 @@ namespace WorkoutApp.CMD
         {
             while (true)
             {
-                Console.Write("Enter your birth day (dd.MM.yyyy): ");
+                Console.Write(resourceManager.GetString("EnterBirhtDay", culture));
                 if (DateTime.TryParse(Console.ReadLine(), out DateTime birthDate))
                 {
                     return birthDate;
                 }
-                Console.WriteLine("Wrong format of birth date. Please try again");
+                Console.WriteLine(Languages.WrongInput.WrongBirthDate);
             }
         }
-
+        /// <summary>
+        /// Entering food information into a meal
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>tuple(Foodstuff, weight)</returns>
         private static (Foodstuff foodstuff, double weight) EnterIngestion(User user)
         {
-            Console.Write("\nEnter food name: ");
+            Console.Write(resourceManager.GetString("EnterFoodName", culture));
             string foodName = Console.ReadLine();
-            double foodWeight = ParseDouble("serving weight");
-            Console.WriteLine("Enter values ​per 100 grams of product");
-            double proteins = ParseDouble("proteins");
-            double fats = ParseDouble("fats");
-            double carbohydrates = ParseDouble("carbohydrates");
-            double callories = ParseDouble("callories");
-            Foodstuff foodstuff = new Foodstuff(foodName, proteins, fats, carbohydrates, callories);
+            double foodWeight = ParseDouble(resourceManager.GetString("ServingWeight", culture));
+            Console.WriteLine(resourceManager.GetString("EnterValues", culture));
+            double proteins = ParseDouble(resourceManager.GetString("Proteins", culture));
+            double fats = ParseDouble(resourceManager.GetString("Fats", culture));
+            double carbohydrates = ParseDouble(resourceManager.GetString("Carbohydrates", culture));
+            double calories = ParseDouble(resourceManager.GetString("Calories", culture));
+            Foodstuff foodstuff = new Foodstuff(foodName, proteins, fats, carbohydrates, calories);
             return (foodstuff, foodWeight);
         }
     }

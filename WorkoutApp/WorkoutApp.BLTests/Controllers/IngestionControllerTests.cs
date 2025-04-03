@@ -27,9 +27,18 @@ namespace WorkoutApp.BL.Controllers.Tests
 
             //Act
             ingestionController.AddFoodstuff(foodstuff, 100);
-
-            //Asserts
-            Assert.AreEqual(foodstuff.FoodName, ingestionController.Ingestion.FoodstuffsList.First().Key.FoodName);
+            var list = ingestionController.Ingestion.FoodstuffsList;
+            Foodstuff element = null;
+            foreach(var item in list.Keys)
+            {
+                if (item.FoodName.Equals(foodName))
+                {
+                    element = item;
+                    break;
+                }
+            }
+            //Assert
+            Assert.AreEqual(foodstuff.FoodName, element.FoodName);
 
         }
     }
