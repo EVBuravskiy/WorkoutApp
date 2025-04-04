@@ -120,8 +120,8 @@
   <data name="TryAgain" xml:space="preserve">
     <value>Please try again!</value>
   </data>
-  <data name="WrongBirthDate" xml:space="preserve">
-    <value>Wrong format of birth date.</value>
+  <data name="WrongDate" xml:space="preserve">
+    <value>Wrong format of date. Try again.</value>
   </data>
   <data name="WrongFormat" xml:space="preserve">
     <value>Wrong format of</value>

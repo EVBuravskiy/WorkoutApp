@@ -70,11 +70,11 @@ namespace WorkoutApp.CMD.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Wrong format of birth date..
+        ///   Ищет локализованную строку, похожую на Wrong format of date. Try again..
         /// </summary>
-        internal static string WrongBirthDate {
+        internal static string WrongDate {
             get {
-                return ResourceManager.GetString("WrongBirthDate", resourceCulture);
+                return ResourceManager.GetString("WrongDate", resourceCulture);
             }
         }
         

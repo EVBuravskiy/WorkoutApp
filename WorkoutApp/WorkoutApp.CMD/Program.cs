@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Resources;
-using System.Text.RegularExpressions;
 using WorkoutApp.BL.Controllers;
 using WorkoutApp.BL.Models;
 
@@ -9,7 +8,7 @@ namespace WorkoutApp.CMD
 {
     internal class Program
     {
-        static string cultureChoose;
+        static string cultureChoose = "";
         static CultureInfo culture;
         static ResourceManager resourceManager;
         static void Main(string[] args)
@@ -33,48 +32,77 @@ namespace WorkoutApp.CMD
                     cultureChoose = "ru-ru";
                 }
             }
+            if (!string.IsNullOrEmpty(cultureChoose))
+            {
+                culture = CultureInfo.CreateSpecificCulture(cultureChoose);
+            }
             Console.Clear();
-            culture = CultureInfo.CreateSpecificCulture(cultureChoose);
+
             resourceManager = new ResourceManager("WorkoutApp.CMD.Languages.Messages", typeof(Program).Assembly);
             Console.WriteLine(resourceManager.GetString("Greating", culture));
             Console.WriteLine(resourceManager.GetString("EnterName", culture));
+            
             string userName = Console.ReadLine();
+            //TODO: Добавить проверку на входящие данные (userName)
             UserController userController = new UserController(userName);
             IngestionController ingestionController = new IngestionController(userController.CurrentUser);
+            ExerciseController exerciseController = new ExerciseController(userController.CurrentUser);
+
 
             if (userController.IsNewUser)
             {
                 Console.Write(resourceManager.GetString("EnterGender", culture));
                 string gender = Console.ReadLine();
-                DateTime birthDate = ParseDateTime();
+                //TODO: Вынести сообщение в локализацию
+                DateTime birthDate = ParseDateTime("date of birthday");
                 double weight = ParseDouble(resourceManager.GetString("Weight", culture));
                 double height = ParseDouble(resourceManager.GetString("Height", culture));
                 Console.Write(resourceManager.GetString("EnterEmail", culture));
                 string email = Console.ReadLine();
+                //TODO: Добавить проверку на входящие данные (email) через регулярное выражение
                 userController.SetNewUserData(gender, birthDate, weight, height, email);
             }
-            Console.Clear();
-            Console.WriteLine($"{resourceManager.GetString("HelloUser", culture)}{ userController.CurrentUser}");
-            Console.WriteLine(resourceManager.GetString("WhatDo", culture));
-            Console.WriteLine($"\t{resourceManager.GetString("EnterMeal", culture)}");
-            Console.WriteLine($"\tA - enter exercise");
-            var key = Console.ReadKey();
-            Console.Clear();
-            if(key.Key == ConsoleKey.E || key.Key == ConsoleKey.T)
+            while (true)
             {
-                var tuplefood = EnterIngestion(userController.CurrentUser);
-                ingestionController.AddFoodstuff(tuplefood.foodstuff, tuplefood.weight);
-                var ingestions = ingestionController.GetIngestion();
-                Console.WriteLine(ingestions.User.ToString());
-                Console.WriteLine(ingestions.Moment.ToString());
-                Console.WriteLine(ingestions.FoodstuffsList.First().Key.FoodstuffName);
-                Console.WriteLine(ingestions.FoodstuffsList.First().Key.Calories);
-                foreach(var item in ingestionController.Ingestion.FoodstuffsList)
+                Console.Clear();
+                Console.WriteLine($"{resourceManager.GetString("HelloUser", culture)}{ userController.CurrentUser}");
+                Console.WriteLine(resourceManager.GetString("WhatDo", culture));
+                Console.WriteLine($"\t{resourceManager.GetString("EnterMeal", culture)}");
+                //TODO: Вынести сообщение в локализацию
+                Console.WriteLine($"\tA - enter exercise");
+                Console.WriteLine("Q - exit application");
+                var key = Console.ReadKey();
+                Console.Clear();
+                switch (key.Key)
                 {
-                    Console.WriteLine($"\t{item.Key} - {item.Value}");
+                    case ConsoleKey.E:
+                    case ConsoleKey.T:
+                        var tuplefood = EnterIngestion();
+                        ingestionController.AddFoodstuff(tuplefood.foodstuff, tuplefood.weight);
+                        foreach (var item in ingestionController.Ingestion.FoodstuffsList)
+                        {
+                            Console.WriteLine($"{item.Key} - {item.Value}");
+                        }
+                        break;
+                    case ConsoleKey.A:
+                    case ConsoleKey.F:
+                        var activities = EnterExersice();
+                        exerciseController.AddPhysicalActivity(activities.physicalActivity, activities.start, activities.end);
+                        foreach (var item in exerciseController.ExercisesList)
+                        {
+                            Console.WriteLine($"\t{item.PhysicalActivity.PhysicalActivityName} {item.ExerciseStart.ToShortDateString()} from {item.ExerciseStart.ToShortTimeString()} to {item.ExerciseFinish.ToShortTimeString()}");
+                        };
+                        break;
+                    case ConsoleKey.Q:
+                        Console.WriteLine("Goodbye! See you later");
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("Wrong command. Try again");
+                        break;
+
                 }
             }
-
         }
 
         /// <summary>
@@ -95,30 +123,30 @@ namespace WorkoutApp.CMD
             }
         }
         /// <summary>
-        /// Parse date of birthday from string
+        /// Parse date from string
         /// </summary>
         /// <returns>DateTime</returns>
-        private static DateTime ParseDateTime()
+        private static DateTime ParseDateTime(string message)
         {
             while (true)
             {
-                Console.Write(resourceManager.GetString("EnterBirhtDay", culture));
-                if (DateTime.TryParse(Console.ReadLine(), out DateTime birthDate))
+                Console.Write($"Введите {message} (dd.MM.yyyy): ");
+                if (DateTime.TryParse(Console.ReadLine(), out DateTime date))
                 {
-                    return birthDate;
+                    return date;
                 }
-                Console.WriteLine(Languages.WrongInput.WrongBirthDate);
+                Console.WriteLine($"Неверный формат {message}");
             }
         }
         /// <summary>
         /// Entering food information into a meal
         /// </summary>
-        /// <param name="user"></param>
         /// <returns>tuple(Foodstuff, weight)</returns>
-        private static (Foodstuff foodstuff, double weight) EnterIngestion(User user)
+        private static (Foodstuff foodstuff, double weight) EnterIngestion()
         {
             Console.Write(resourceManager.GetString("EnterFoodName", culture));
             string foodName = Console.ReadLine();
+            //TODO: Добавить проверку на входящие данные (foodName)
             double foodWeight = ParseDouble(resourceManager.GetString("ServingWeight", culture));
             Console.WriteLine(resourceManager.GetString("EnterValues", culture));
             double proteins = ParseDouble(resourceManager.GetString("Proteins", culture));
@@ -127,6 +155,24 @@ namespace WorkoutApp.CMD
             double calories = ParseDouble(resourceManager.GetString("Calories", culture));
             Foodstuff foodstuff = new Foodstuff(foodName, proteins, fats, carbohydrates, calories);
             return (foodstuff, foodWeight);
+        }
+
+        /// <summary>
+        /// Set activity and times of begin and end
+        /// </summary>
+        /// <returns></returns>
+        private static (PhysicalActivity physicalActivity, DateTime start, DateTime end) EnterExersice()
+        {
+            //TODO: Внести сообщение в локализацию
+            Console.Write("Введите название упражения: ");
+            string exerciseName = Console.ReadLine();
+            //TODO: Реализовать проверку входящей строки
+            DateTime exerciseStart = ParseDateTime("exercise begin");
+            DateTime exerciseEnd = ParseDateTime("exercise end");
+            var energy = ParseDouble("расход энергии в минуту");
+            //TODL: Вынести создание активности в контроллер
+            var activity = new PhysicalActivity(exerciseName, energy);
+            return (activity, exerciseStart, exerciseEnd);
         }
     }
 }

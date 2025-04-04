@@ -26,6 +26,10 @@ namespace WorkoutApp.BL.Controllers.Tests
             Exercise loadExersice = exerciseController.ExercisesList.FirstOrDefault(act => act.PhysicalActivity.PhysicalActivityName == activityName);
 
             //Assert
+            if (loadExersice != null)
+            {
+                Assert.Fail();
+            }
             Assert.AreEqual(activityName, loadExersice.PhysicalActivity.PhysicalActivityName);
         }
     }
