@@ -27,7 +27,7 @@ namespace WorkoutApp.BL.Controllers.Tests
 
             //Act
             ingestionController.AddFoodstuff(foodstuff, 100);
-            var list = ingestionController.Ingestion.FoodstuffsList;
+            var list = ingestionController.Ingestion.FoodstuffsDict;
             Foodstuff element = null;
             foreach(var item in list.Keys)
             {
@@ -38,6 +38,10 @@ namespace WorkoutApp.BL.Controllers.Tests
                 }
             }
             //Assert
+            if (element == null)
+            {
+                Assert.Fail();
+            }
             Assert.AreEqual(foodstuff.FoodstuffName, element.FoodstuffName);
 
         }

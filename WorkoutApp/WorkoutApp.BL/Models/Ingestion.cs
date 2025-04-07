@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorkoutApp.BL.Models
+﻿namespace WorkoutApp.BL.Models
 {
     [Serializable]
 
@@ -13,22 +11,32 @@ namespace WorkoutApp.BL.Models
         /// <summary>
         /// Ingestion number
         /// </summary>
-        public int IngestionID { get; }
+        public int IngestionID { get; set; }
 
         /// <summary>
         /// Time of ingestion
         /// </summary>
-        public DateTime Moment { get; }
+        public DateTime Moment { get; set; }
 
         /// <summary>
         /// Dictionary of foods and weight
         /// </summary>
-        public Dictionary<Foodstuff, double> FoodstuffsList { get; }
+        public Dictionary<Foodstuff, double> FoodstuffsDict { get; set; }
 
         /// <summary>
         /// User
         /// </summary>
-        public User User { get; }
+        public virtual User User { get; set; }
+
+        /// <summary>
+        /// User ID
+        /// </summary>
+        public int UserID { get; set; }
+
+        /// <summary>
+        /// Create ingestion
+        /// </summary>
+        public Ingestion() { }
 
         /// <summary>
         /// Create ingestion
@@ -39,7 +47,8 @@ namespace WorkoutApp.BL.Models
         {
             User = user ?? throw new ArgumentNullException("User can't be null", nameof(user));
             Moment = DateTime.Now;
-            FoodstuffsList = new Dictionary<Foodstuff, double>();
+            FoodstuffsDict = new Dictionary<Foodstuff, double>();
+            UserID = user.UserID;
         }
 
         /// <summary>
@@ -49,14 +58,21 @@ namespace WorkoutApp.BL.Models
         /// <param name="weight"></param>
         public void AddFoods(Foodstuff foodstuff, double weight)
         {
-            var meal = FoodstuffsList.Keys.FirstOrDefault(food => food.FoodstuffName.Equals(foodstuff.FoodstuffName)); 
+            Foodstuff meal = null;
+            if (FoodstuffsDict == null)
+            {
+                FoodstuffsDict = new Dictionary<Foodstuff, double>();
+            }
+            if (FoodstuffsDict.Count > 0)
+            {
+                meal = FoodstuffsDict.Keys.FirstOrDefault(food => food.FoodstuffName.Equals(foodstuff.FoodstuffName));
+            }
             if (meal == null)
             {
-                FoodstuffsList.Add(foodstuff, weight);
+                FoodstuffsDict.Add(foodstuff, weight);
                 return;
             }
-            var element = FoodstuffsList[meal];
-            FoodstuffsList[meal] += weight;
+            FoodstuffsDict[meal] += weight;
         }
     }
 }

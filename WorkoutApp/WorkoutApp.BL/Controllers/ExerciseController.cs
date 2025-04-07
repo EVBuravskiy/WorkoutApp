@@ -4,8 +4,6 @@ namespace WorkoutApp.BL.Controllers
 {
     public class ExerciseController : BaseController
     {
-        private const string EXERCISE_FILE_NAME = "exercises.dat";
-        private const string ACTIVITY_FILE_NAME = "activities.dat";
         /// <summary>
         /// User
         /// </summary>
@@ -65,38 +63,38 @@ namespace WorkoutApp.BL.Controllers
         /// <summary>
         /// Get list of all exercises from file
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of exercises</returns>
         private List<Exercise> GetAllExercises()
         {
-            return LoadItems<Exercise>(EXERCISE_FILE_NAME) ?? new List<Exercise>();
+            return LoadItems<Exercise>() ?? new List<Exercise>();
         }
 
         /// <summary>
         /// Save exercises into file
         /// </summary>
-        /// <returns></returns>
+        /// <returns>bool</returns>
         private bool SaveExercises()
         {
-            return Save(EXERCISE_FILE_NAME, ExercisesList);
+            return Save(ExercisesList);
         }
 
         /// <summary>
         /// Get list of all physical activities from file
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of physical activities</returns>
         private List<PhysicalActivity> GetAllPhysicalActivities()
         {
-            return LoadItems<PhysicalActivity>(ACTIVITY_FILE_NAME) ?? new List<PhysicalActivity>();
+            return LoadItems<PhysicalActivity>() ?? new List<PhysicalActivity>();
 
         }
 
         /// <summary>
         /// Save physical activities into file
         /// </summary>
-        /// <returns></returns>
+        /// <returns>bool</returns>
         private bool SaveActivities()
         {
-            return Save(ACTIVITY_FILE_NAME, PhysicalActivities);
+            return Save(PhysicalActivities);
         }
     }
 }

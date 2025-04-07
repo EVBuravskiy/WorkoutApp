@@ -11,11 +11,17 @@ namespace WorkoutApp.BL.Models
         /// <summary>
         /// GenderID
         /// </summary>
-        public int GenderID { get; }
+        public int GenderID { get; set; }
         /// <summary>
         /// GenderName
         /// </summary>
-        public string GenderName { get; }
+        public string GenderName { get; set; }
+
+        /// <summary>
+        /// Create gender default for EntityFramework
+        /// </summary>
+        public Gender() { }
+
         /// <summary>
         /// Create new Gender
         /// </summary>

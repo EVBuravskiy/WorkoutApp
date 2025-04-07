@@ -1,91 +1,28 @@
-﻿using System.Runtime.Serialization.Formatters.Binary;
-
-namespace WorkoutApp.BL.Controllers
+﻿namespace WorkoutApp.BL.Controllers
 {
     public abstract class  BaseController
     {
+        private readonly IDataSaver manager = new DatabaseDataSaver();
+
         /// <summary>
-        /// Binary serialize and save in file
+        /// Save list of data
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        protected bool Save(string fileName, object element)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <returns>bool</returns>
+        protected bool Save<T>(List<T> items) where T: class 
         {
-            try
-            {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                using (FileStream file = new FileStream(fileName, FileMode.OpenOrCreate))
-                {
-                    binaryFormatter.Serialize(file, element);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return manager.Save(items);
         }
 
         /// <summary>
-        /// Load from file and deserialize data
+        /// Load list of data from source
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="fileName"></param>
-        /// <returns>List of deserialize data </returns>
-        protected List<T> LoadItems<T>(string fileName)
+        /// <returns>List of data </returns>
+        protected List<T> LoadItems<T>() where T : class
         {
-            try
-            {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                using (FileStream file = new FileStream(fileName, FileMode.OpenOrCreate))
-                {
-                    if (file.Length > 0 && binaryFormatter.Deserialize(file) is List<T> elements)
-                    {
-                        return elements;
-                    }
-                    else
-                    {
-                        return new List<T>();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new List<T>();
-            }
-        }
-
-        /// <summary>
-        /// Load from file and deserialize data
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="fileName"></param>
-        /// <returns>deserialize data</returns>
-        protected T LoadItem<T>(string fileName)
-        {
-            try
-            {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                using (FileStream file = new FileStream(fileName, FileMode.OpenOrCreate))
-                {
-                    if (file.Length > 0 && binaryFormatter.Deserialize(file) is T item)
-                    {
-                        return item;
-                    }
-                    else
-                    {
-                        return default(T);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return default(T);
-            }
+            return manager.LoadItems<T>();
         }
     }
 }

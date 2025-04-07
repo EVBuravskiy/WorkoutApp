@@ -59,7 +59,7 @@ namespace WorkoutApp.BL.Controllers
         /// <returns>List of users </returns>
         public List<User> GetAllUsersData()
         {
-            return LoadItems<User>(USER_FILE_NAME);
+            return LoadItems<User>();
         }
 
 
@@ -70,7 +70,7 @@ namespace WorkoutApp.BL.Controllers
         /// <exception cref="ArgumentNullException"></exception>
         public bool SaveUsers()
         {
-            return Save(USER_FILE_NAME, Users);
+            return Save(Users);
         }
 
         /// <summary>

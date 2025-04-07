@@ -41,7 +41,7 @@ namespace WorkoutApp.CMD
             resourceManager = new ResourceManager("WorkoutApp.CMD.Languages.Messages", typeof(Program).Assembly);
             Console.WriteLine(resourceManager.GetString("Greating", culture));
             Console.WriteLine(resourceManager.GetString("EnterName", culture));
-            
+
             string userName = Console.ReadLine();
             //TODO: Добавить проверку на входящие данные (userName)
             UserController userController = new UserController(userName);
@@ -65,7 +65,7 @@ namespace WorkoutApp.CMD
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine($"{resourceManager.GetString("HelloUser", culture)}{ userController.CurrentUser}");
+                Console.WriteLine($"{resourceManager.GetString("HelloUser", culture)}{userController.CurrentUser}");
                 Console.WriteLine(resourceManager.GetString("WhatDo", culture));
                 Console.WriteLine($"\t{resourceManager.GetString("EnterMeal", culture)}");
                 //TODO: Вынести сообщение в локализацию
@@ -79,7 +79,7 @@ namespace WorkoutApp.CMD
                     case ConsoleKey.T:
                         var tuplefood = EnterIngestion();
                         ingestionController.AddFoodstuff(tuplefood.foodstuff, tuplefood.weight);
-                        foreach (var item in ingestionController.Ingestion.FoodstuffsList)
+                        foreach (var item in ingestionController.Ingestion.FoodstuffsDict)
                         {
                             Console.WriteLine($"{item.Key} - {item.Value}");
                         }
@@ -130,11 +130,13 @@ namespace WorkoutApp.CMD
         {
             while (true)
             {
+                //TODO: Внести сообщение в локализацию
                 Console.Write($"Введите {message} (dd.MM.yyyy): ");
                 if (DateTime.TryParse(Console.ReadLine(), out DateTime date))
                 {
                     return date;
                 }
+                //TODO: Внести сообщение в локализацию
                 Console.WriteLine($"Неверный формат {message}");
             }
         }

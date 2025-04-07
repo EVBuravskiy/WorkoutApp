@@ -10,18 +10,22 @@
         /// <summary>
         /// User identification number
         /// </summary>
-        public int UserID { get; }
+        public int UserID { get; set; }
 
         /// <summary>
         /// User's name
         /// </summary>
-        public string UserName { get; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// User's gender
         /// </summary>
-        public Gender Gender { get; set; }
+        public virtual Gender Gender { get; set; }
 
+        /// <summary>
+        /// Gender ID
+        /// </summary>
+        public int GenderID { get; set; }
         /// <summary>
         /// User's birth date
         /// </summary>
@@ -56,7 +60,16 @@
         /// </summary>
         public string Email { get; set; }
 
+        /// <summary>
+        /// Collections of ingestions for EntityFramework
+        /// </summary>
+        public virtual ICollection<Ingestion> Ingestions { get; set; }
         #endregion
+
+        /// <summary>
+        /// Create new user default for EntityFramework
+        /// </summary>
+        public User() { }
 
         /// <summary>
         /// Create new user
@@ -66,8 +79,8 @@
         {
             UserName = userName;
         }
-        
-        
+
+       
         /// <summary>
         /// Create new user
         /// </summary>

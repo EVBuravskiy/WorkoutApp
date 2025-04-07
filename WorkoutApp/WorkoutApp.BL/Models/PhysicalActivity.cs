@@ -9,17 +9,27 @@
         /// <summary>
         /// Physical activity ID
         /// </summary>
-        public int PhysicalActivityID { get; }
+        public int PhysicalActivityID { get; set; }
 
         /// <summary>
         /// Physical activity name
         /// </summary>
-        public string PhysicalActivityName { get; }
+        public string PhysicalActivityName { get; set; }
 
         /// <summary>
         /// Number of calories per minute
         /// </summary>
-        public double CaloriesPerMinute { get; }
+        public double CaloriesPerMinute { get; set; }
+
+        /// <summary>
+        /// Exercise that includes activity
+        /// </summary>
+        public virtual ICollection<Exercise> Exercises { get; set;}
+
+        /// <summary>
+        /// Create physical activity
+        /// </summary>
+        public PhysicalActivity() { }
 
         /// <summary>
         /// Create physical activity
@@ -28,6 +38,7 @@
         /// <param name="caloriesPerMinute"></param>
         public PhysicalActivity(string physicalActivityname, double caloriesPerMinute) 
         {
+            //TODO: Добавить проверку входных данных
             PhysicalActivityName = physicalActivityname;
             CaloriesPerMinute = caloriesPerMinute;
         }

@@ -8,16 +8,6 @@ namespace WorkoutApp.BL.Controllers
     public class IngestionController : BaseController
     {
         /// <summary>
-        /// Const string file name for Foodstuffs
-        /// </summary>
-        private const string FOODS_FILE_NAME = "foodstuffs.dat";
-
-        /// <summary>
-        /// Const string file name for Ingestions
-        /// </summary>
-        private const string INGESTIONS_FILE_NAME = "ingestions.dat";
-
-        /// <summary>
         /// User
         /// </summary>
         private readonly User user;
@@ -45,8 +35,9 @@ namespace WorkoutApp.BL.Controllers
         public IngestionController(User user)
         {
             this.user = user ?? throw new ArgumentNullException("User can't be null", nameof(user));
+            Ingestion = new Ingestion();
             Foodstuffs = GetAllFoodstuffs();
-            Ingestion = GetIngestion();
+            Ingestions = GetAllIngestions();
         }
         
         /// <summary>
@@ -55,8 +46,8 @@ namespace WorkoutApp.BL.Controllers
         /// <returns>bool</returns>
         private bool Save()
         {
-            bool resultSaveFoodstuffs = Save(FOODS_FILE_NAME, Foodstuffs);
-            bool resultSaveIngestions = Save(INGESTIONS_FILE_NAME, Ingestion);
+            bool resultSaveFoodstuffs = Save<Foodstuff>(Foodstuffs);
+            bool resultSaveIngestions = Save<Ingestion>(Ingestions);
             return resultSaveFoodstuffs && resultSaveIngestions;
         }
 
@@ -66,16 +57,16 @@ namespace WorkoutApp.BL.Controllers
         /// <returns>List of foodstuffs</returns>
         public List<Foodstuff> GetAllFoodstuffs()
         {
-            return LoadItems<Foodstuff>(FOODS_FILE_NAME) ?? new List<Foodstuff>();
+            return LoadItems<Foodstuff>() ?? new List<Foodstuff>();
         }
 
         /// <summary>
         /// Load from file ingestion and deserialize
         /// </summary>
         /// <returns>Ingestion</returns>
-        public Ingestion GetIngestion()
+        public List<Ingestion> GetAllIngestions()
         {
-            return LoadItem<Ingestion>(INGESTIONS_FILE_NAME) ?? new Ingestion(user);
+            return LoadItems<Ingestion>();
         }
         
         /// <summary>
@@ -85,7 +76,11 @@ namespace WorkoutApp.BL.Controllers
         /// <param name="weight"></param>
         public void AddFoodstuff(Foodstuff inputFoodstuff, double weight)
         {
-            Foodstuff foodstuff = Foodstuffs.SingleOrDefault(food => food.FoodstuffName.Equals(inputFoodstuff.FoodstuffName));
+            Foodstuff foodstuff = null;
+            if (Foodstuffs.Count > 0)
+            {
+                foodstuff = Foodstuffs.SingleOrDefault(food => food.FoodstuffName.Equals(inputFoodstuff.FoodstuffName));
+            }
             if(foodstuff == null)
             {
                 Foodstuffs.Add(inputFoodstuff);
@@ -94,6 +89,7 @@ namespace WorkoutApp.BL.Controllers
                 return;
             }
             Ingestion.AddFoods(foodstuff, weight);
+            Ingestions.Add(Ingestion);
             Save();
         }
     }
