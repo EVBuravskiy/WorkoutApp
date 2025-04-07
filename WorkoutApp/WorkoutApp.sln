@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutApp.BL", "WorkoutApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutApp.CMD", "WorkoutApp.CMD\WorkoutApp.CMD.csproj", "{0DDD6B3A-C1D5-4FD0-BBF7-3A607A484582}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutApp.BLTests", "WorkoutApp.BLTests\WorkoutApp.BLTests.csproj", "{6F3F38DE-1C51-4808-A290-AEBCB2F9712D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutApp.BLTests", "WorkoutApp.BLTests\WorkoutApp.BLTests.csproj", "{6F3F38DE-1C51-4808-A290-AEBCB2F9712D}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "setup", "setup\setup.vdproj", "{68740E55-12E5-42C8-91DA-54096718A5DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,8 @@ Global
 		{6F3F38DE-1C51-4808-A290-AEBCB2F9712D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F3F38DE-1C51-4808-A290-AEBCB2F9712D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F3F38DE-1C51-4808-A290-AEBCB2F9712D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68740E55-12E5-42C8-91DA-54096718A5DB}.Debug|Any CPU.ActiveCfg = Debug
+		{68740E55-12E5-42C8-91DA-54096718A5DB}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

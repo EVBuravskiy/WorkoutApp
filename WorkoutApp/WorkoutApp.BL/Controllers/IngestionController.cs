@@ -27,6 +27,7 @@ namespace WorkoutApp.BL.Controllers
         /// </summary>
         public List<Ingestion> Ingestions { get; }
 
+
         /// <summary>
         /// Create IngestionController
         /// </summary>

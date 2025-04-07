@@ -16,6 +16,11 @@ namespace WorkoutApp.BL.Models
         /// GenderName
         /// </summary>
         public string GenderName { get; set; }
+        
+        /// <summary>
+        /// Collection of users
+        /// </summary>
+        public virtual ICollection<User> Users { get; set; }
 
         /// <summary>
         /// Create gender default for EntityFramework

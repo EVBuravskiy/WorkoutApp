@@ -27,7 +27,7 @@ namespace WorkoutApp.BL.Controllers.Tests
 
             //Act
             ingestionController.AddFoodstuff(foodstuff, 100);
-            var list = ingestionController.Ingestion.FoodstuffsDict;
+            var list = ingestionController.Ingestion.Foodstuffs;
             Foodstuff element = null;
             foreach(var item in list.Keys)
             {

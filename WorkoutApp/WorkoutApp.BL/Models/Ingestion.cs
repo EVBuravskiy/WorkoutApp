@@ -21,7 +21,7 @@
         /// <summary>
         /// Dictionary of foods and weight
         /// </summary>
-        public Dictionary<Foodstuff, double> FoodstuffsDict { get; set; }
+        public Dictionary<Foodstuff, double> Foodstuffs { get; set; }
 
         /// <summary>
         /// User
@@ -46,8 +46,8 @@
         public Ingestion(User user)
         {
             User = user ?? throw new ArgumentNullException("User can't be null", nameof(user));
-            Moment = DateTime.Now;
-            FoodstuffsDict = new Dictionary<Foodstuff, double>();
+            Moment = DateTime.UtcNow;
+            Foodstuffs = new Dictionary<Foodstuff, double>();
             UserID = user.UserID;
         }
 
@@ -59,20 +59,20 @@
         public void AddFoods(Foodstuff foodstuff, double weight)
         {
             Foodstuff meal = null;
-            if (FoodstuffsDict == null)
+            if (Foodstuffs == null)
             {
-                FoodstuffsDict = new Dictionary<Foodstuff, double>();
+                Foodstuffs = new Dictionary<Foodstuff, double>();
             }
-            if (FoodstuffsDict.Count > 0)
+            if (Foodstuffs.Count > 0)
             {
-                meal = FoodstuffsDict.Keys.FirstOrDefault(food => food.FoodstuffName.Equals(foodstuff.FoodstuffName));
+                meal = Foodstuffs.Keys.FirstOrDefault(food => food.FoodstuffName.Equals(foodstuff.FoodstuffName));
             }
             if (meal == null)
             {
-                FoodstuffsDict.Add(foodstuff, weight);
+                Foodstuffs.Add(foodstuff, weight);
                 return;
             }
-            FoodstuffsDict[meal] += weight;
+            Foodstuffs[meal] += weight;
         }
     }
 }

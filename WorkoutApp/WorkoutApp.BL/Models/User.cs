@@ -64,6 +64,11 @@
         /// Collections of ingestions for EntityFramework
         /// </summary>
         public virtual ICollection<Ingestion> Ingestions { get; set; }
+
+        /// <summary>
+        /// Collections of exercises for EntityFramework
+        /// </summary>
+        public virtual ICollection<Exercise> Exercises { get; set; }
         #endregion
 
         /// <summary>

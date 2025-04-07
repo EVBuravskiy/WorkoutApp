@@ -79,7 +79,7 @@ namespace WorkoutApp.CMD
                     case ConsoleKey.T:
                         var tuplefood = EnterIngestion();
                         ingestionController.AddFoodstuff(tuplefood.foodstuff, tuplefood.weight);
-                        foreach (var item in ingestionController.Ingestion.FoodstuffsDict)
+                        foreach (var item in ingestionController.Ingestion.Foodstuffs)
                         {
                             Console.WriteLine($"{item.Key} - {item.Value}");
                         }

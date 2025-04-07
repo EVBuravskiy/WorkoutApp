@@ -2,7 +2,7 @@
 {
     public abstract class  BaseController
     {
-        private readonly IDataSaver manager = new DatabaseDataSaver();
+        private readonly IDataSaver manager = new SerializeDataSaver();
 
         /// <summary>
         /// Save list of data
