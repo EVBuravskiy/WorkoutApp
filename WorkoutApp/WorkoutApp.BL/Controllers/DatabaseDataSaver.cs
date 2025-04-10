@@ -3,10 +3,10 @@
     internal class DatabaseDataSaver : IDataSaver 
     {
         /// <summary>
-        /// Load List of elements from DB
+        /// Load elements of class from DB
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns>List of elements </returns>
+        /// <returns>list of elements</returns>
         public List<T> LoadItems<T>() where T : class
         {
             try
@@ -21,10 +21,10 @@
                 Console.WriteLine(ex.Message);
                 return new List<T>();
             }
-
         }
+
         /// <summary>
-        /// Save list of elements into DB
+        /// Save elements of class into DB
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
@@ -40,6 +40,8 @@
             {
                 using (WorkoutAppContext appContext = new WorkoutAppContext())
                 {
+                    List<T> itemsInDb = LoadItems<T>(); //
+                    items.RemoveRange(0, itemsInDb.Count); //
                     appContext.Set<T>().AddRange(items);
                     appContext.SaveChanges();
                     return true;

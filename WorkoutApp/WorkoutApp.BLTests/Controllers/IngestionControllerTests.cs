@@ -17,21 +17,20 @@ namespace WorkoutApp.BL.Controllers.Tests
             userController = new UserController(userName);
             IngestionController ingestionController = new IngestionController(userController.CurrentUser);
             
-            string foodName = Guid.NewGuid().ToString();
+            string productName = Guid.NewGuid().ToString();
             Random rnd = new Random();
             double proteins = (double)rnd.Next(50, 500);
             double fats = (double)rnd.Next(50, 500);
             double carbohydrates = (double)rnd.Next(50, 500);
             double calories = (double)rnd.Next(50, 500);
-            Foodstuff foodstuff = new Foodstuff(foodName, proteins, fats, carbohydrates, calories);
 
             //Act
-            ingestionController.AddFoodstuff(foodstuff, 100);
-            var list = ingestionController.Ingestion.Foodstuffs;
-            Foodstuff element = null;
-            foreach(var item in list.Keys)
+            ingestionController.AddProductToBd(productName, proteins, fats, carbohydrates, calories);
+            var list = ingestionController.Products;
+            Product element = null;
+            foreach(var item in list)
             {
-                if (item.FoodstuffName.Equals(foodName))
+                if (item.ProductName == productName)
                 {
                     element = item;
                     break;
@@ -42,8 +41,7 @@ namespace WorkoutApp.BL.Controllers.Tests
             {
                 Assert.Fail();
             }
-            Assert.AreEqual(foodstuff.FoodstuffName, element.FoodstuffName);
-
+            Assert.AreEqual(productName, element.ProductName);
         }
     }
 }

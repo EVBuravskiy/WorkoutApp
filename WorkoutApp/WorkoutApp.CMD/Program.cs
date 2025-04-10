@@ -72,17 +72,13 @@ namespace WorkoutApp.CMD
                 Console.WriteLine($"\tA - enter exercise");
                 Console.WriteLine("Q - exit application");
                 var key = Console.ReadKey();
+                
                 Console.Clear();
                 switch (key.Key)
                 {
                     case ConsoleKey.E:
                     case ConsoleKey.T:
-                        var tuplefood = EnterIngestion();
-                        ingestionController.AddFoodstuff(tuplefood.foodstuff, tuplefood.weight);
-                        foreach (var item in ingestionController.Ingestion.Foodstuffs)
-                        {
-                            Console.WriteLine($"{item.Key} - {item.Value}");
-                        }
+                        EnterIngestion(ingestionController);
                         break;
                     case ConsoleKey.A:
                     case ConsoleKey.F:
@@ -140,23 +136,28 @@ namespace WorkoutApp.CMD
                 Console.WriteLine($"Неверный формат {message}");
             }
         }
+        
         /// <summary>
         /// Entering food information into a meal
         /// </summary>
-        /// <returns>tuple(Foodstuff, weight)</returns>
-        private static (Foodstuff foodstuff, double weight) EnterIngestion()
+        /// <param name="ingestionController"></param>
+        private static void EnterIngestion(IngestionController ingestionController)
         {
             Console.Write(resourceManager.GetString("EnterFoodName", culture));
-            string foodName = Console.ReadLine();
-            //TODO: Добавить проверку на входящие данные (foodName)
-            double foodWeight = ParseDouble(resourceManager.GetString("ServingWeight", culture));
-            Console.WriteLine(resourceManager.GetString("EnterValues", culture));
-            double proteins = ParseDouble(resourceManager.GetString("Proteins", culture));
-            double fats = ParseDouble(resourceManager.GetString("Fats", culture));
-            double carbohydrates = ParseDouble(resourceManager.GetString("Carbohydrates", culture));
-            double calories = ParseDouble(resourceManager.GetString("Calories", culture));
-            Foodstuff foodstuff = new Foodstuff(foodName, proteins, fats, carbohydrates, calories);
-            return (foodstuff, foodWeight);
+            string productName = Console.ReadLine();
+            if (!ingestionController.CheckProductInBd(productName))
+            {
+                //TODO: Добавить проверку на входящие данные (productName)
+                Console.WriteLine(resourceManager.GetString("EnterValues", culture));
+                double proteins = ParseDouble(resourceManager.GetString("Proteins", culture));
+                double fats = ParseDouble(resourceManager.GetString("Fats", culture));
+                double carbohydrates = ParseDouble(resourceManager.GetString("Carbohydrates", culture));
+                double calories = ParseDouble(resourceManager.GetString("Calories", culture));
+                ingestionController.AddProductToBd(productName, proteins, fats, carbohydrates, calories);
+            }
+            Console.Write("Введите вес продукта: ");
+            double.TryParse(Console.ReadLine(), out double weight);
+            ingestionController.AddIngestionToBd(weight);
         }
 
         /// <summary>

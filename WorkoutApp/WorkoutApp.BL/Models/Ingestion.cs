@@ -2,26 +2,22 @@
 {
     [Serializable]
 
-    /// <summary>
-    /// Ingestion - eating food
-    /// </summary>
     public class Ingestion
     {
-
         /// <summary>
-        /// Ingestion number
+        /// Ingestion ID
         /// </summary>
         public int IngestionID { get; set; }
 
         /// <summary>
-        /// Time of ingestion
+        /// Product
         /// </summary>
-        public DateTime Moment { get; set; }
+        public Product Product { get; set; }
 
         /// <summary>
-        /// Dictionary of foods and weight
+        /// Product ID
         /// </summary>
-        public Dictionary<Foodstuff, double> Foodstuffs { get; set; }
+        public int ProductID { get; set; }
 
         /// <summary>
         /// User
@@ -34,45 +30,26 @@
         public int UserID { get; set; }
 
         /// <summary>
-        /// Create ingestion
+        /// Weight of product
+        /// </summary>
+        public double Weight { get; set; }
+
+        /// <summary>
+        /// Create ingestion default for EntityFramework
         /// </summary>
         public Ingestion() { }
 
         /// <summary>
         /// Create ingestion
         /// </summary>
-        /// <param name="user"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public Ingestion(User user)
-        {
-            User = user ?? throw new ArgumentNullException("User can't be null", nameof(user));
-            Moment = DateTime.UtcNow;
-            Foodstuffs = new Dictionary<Foodstuff, double>();
-            UserID = user.UserID;
-        }
-
-        /// <summary>
-        /// Add eating foods
-        /// </summary>
-        /// <param name="foodstuff"></param>
+        /// <param name="product"></param>
         /// <param name="weight"></param>
-        public void AddFoods(Foodstuff foodstuff, double weight)
+        /// <exception cref="ArgumentNullException"></exception>
+        public Ingestion(Product product, double weight)
         {
-            Foodstuff meal = null;
-            if (Foodstuffs == null)
-            {
-                Foodstuffs = new Dictionary<Foodstuff, double>();
-            }
-            if (Foodstuffs.Count > 0)
-            {
-                meal = Foodstuffs.Keys.FirstOrDefault(food => food.FoodstuffName.Equals(foodstuff.FoodstuffName));
-            }
-            if (meal == null)
-            {
-                Foodstuffs.Add(foodstuff, weight);
-                return;
-            }
-            Foodstuffs[meal] += weight;
+            Product = product ?? throw new ArgumentNullException("User can't be null", nameof(product));
+            //TODO: Проверить входные данные
+            Weight = weight;
         }
     }
 }

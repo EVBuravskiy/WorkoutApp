@@ -18,7 +18,7 @@ namespace WorkoutApp.BL.Controllers
         /// <summary>
         /// List of users
         /// </summary>
-        internal List<User> Users { get; }
+        public List<User> Users { get; }
 
 
         /// <summary>
@@ -46,10 +46,8 @@ namespace WorkoutApp.BL.Controllers
             if (CurrentUser == null)
             {
                 CurrentUser = new User(inputUserName);
-                Users.Add(CurrentUser);
                 IsNewUser = true;
             }
-            SaveUsers();
         }
 
 
@@ -89,6 +87,7 @@ namespace WorkoutApp.BL.Controllers
             CurrentUser.Weight = weight;
             CurrentUser.Height = height;
             CurrentUser.Email = email;
+            Users.Add(CurrentUser);
             SaveUsers();
         }
     }

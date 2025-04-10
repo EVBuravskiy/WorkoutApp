@@ -1,62 +1,60 @@
 ﻿namespace WorkoutApp.BL.Models
 {
     [Serializable]
-    public class Foodstuff
+    public class Product
     {
-        #region Property
         /// <summary>
-        /// Food identification number
+        /// Product ID
         /// </summary>
-        public int FoodstuffID { get; set; }
+        public int ProductId { get; set; }
+
         /// <summary>
-        /// Food name
+        /// Product name
         /// </summary>
-        public string FoodstuffName { get; set; }
+        public string ProductName { get; set; }
+
         /// <summary>
-        /// Proteins in 100 grams of product
+        /// Proteins in product
         /// </summary>
         public double Proteins { get; set; }
+
         /// <summary>
-        /// Fats in 100 grams of product
+        /// Fats in product
         /// </summary>
         public double Fats { get; set; }
+
         /// <summary>
-        /// Carbohydrates in 100 grams of product 
+        /// Carbohydrates in product
         /// </summary>
         public double Carbohydrates { get; set; }
+        
         /// <summary>
-        /// Caloric content of 100 grams of product
+        /// Calories in product
         /// </summary>
         public double Calories { get; set; }
 
         /// <summary>
-        /// Dictionary of ingestions
+        /// Create product default for EntityFramework
         /// </summary>
-        public virtual ICollection<Ingestion> Ingestions { get; set; }
-        
-        #endregion
-        /// <summary>
-        /// Create foodstuff default for EntityFramework
-        /// </summary>
-        public Foodstuff() { }
+        public Product() { }
 
         /// <summary>
-        /// Create foodstuff
+        /// Create product
         /// </summary>
-        /// <param name="foodName"></param>
+        /// <param name="productName"></param>
         /// <param name="proteins"></param>
         /// <param name="fats"></param>
         /// <param name="carbohydrates"></param>
         /// <param name="calories"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Foodstuff(string foodName, double proteins, double fats, double carbohydrates, double calories)
+        public Product(string productName, double proteins, double fats, double carbohydrates, double calories)
         {
             //TODO: Реализовать проверку входных данных
-            if (string.IsNullOrWhiteSpace(foodName))
+            if (string.IsNullOrWhiteSpace(productName))
             {
-                throw new ArgumentNullException("Product name cannot be empty or null", nameof(foodName));
+                throw new ArgumentNullException("Product name cannot be empty or null", nameof(productName));
             }
-            FoodstuffName = foodName;
+            ProductName = productName;
             Proteins = proteins / 100.0;
             Fats = fats / 100.0;
             Carbohydrates = carbohydrates / 100.0;
@@ -64,14 +62,14 @@
         }
         
         /// <summary>
-        /// Create foodstuff
+        /// Create product
         /// </summary>
-        /// <param name="foodName"></param>
-        public Foodstuff(string foodName) : this (foodName, 0, 0, 0, 0) { }
+        /// <param name="productName"></param>
+        public Product(string productName) : this (productName, 0, 0, 0, 0) { }
 
         public override string ToString()
         {
-            return $"Food: {FoodstuffName}";
+            return $"Food: {ProductName}";
         }
     }
 }

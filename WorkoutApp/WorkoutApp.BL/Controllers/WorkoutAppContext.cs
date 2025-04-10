@@ -14,7 +14,8 @@ namespace WorkoutApp.BL.Controllers
         /// <summary>
         /// Table for foodstuffs
         /// </summary>
-        public DbSet<Foodstuff> Foodstuffs { get; set; }
+        public DbSet<Product> Products { get; set; }
+
 
         /// <summary>
         /// Table for genders
@@ -41,13 +42,13 @@ namespace WorkoutApp.BL.Controllers
         /// </summary>
         public WorkoutAppContext()
         {
-
+            Database.EnsureCreated();
         }
 
         /// <summary>
-        /// Configuring context
+        /// Configuring context for MSSQL
         /// </summary>
-        /// <param name="optionsBuilder"></param>
+        /// <param name = "optionsBuilder" ></ param >
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new ConfigurationBuilder()
@@ -56,5 +57,14 @@ namespace WorkoutApp.BL.Controllers
                 .Build();
             optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
         }
+
+        /// <summary>
+        /// Configuring context for SQLite
+        /// </summary>
+        /// <param name="optionsBuilder"></param>
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlite("Data Source=helloapp.db");
+        //}
     }
 }

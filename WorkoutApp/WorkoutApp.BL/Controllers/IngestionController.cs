@@ -13,85 +13,112 @@ namespace WorkoutApp.BL.Controllers
         private readonly User user;
 
         /// <summary>
-        /// List of foodstuffs
+        /// List of products
         /// </summary>
-        public List<Foodstuff> Foodstuffs { get; }
+        public List<Product> Products { get; set; }
+
+        //List of ingestions
+        public List<Ingestion> Ingestions { get; set; }
 
         /// <summary>
-        /// Ingestion
+        /// Product
         /// </summary>
-        public Ingestion Ingestion { get; }
+        private Product Product { get; set; }
 
         /// <summary>
-        /// List of ingestions
-        /// </summary>
-        public List<Ingestion> Ingestions { get; }
-
-
-        /// <summary>
-        /// Create IngestionController
+        /// Create ingestion controller
         /// </summary>
         /// <param name="user"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public IngestionController(User user)
         {
             this.user = user ?? throw new ArgumentNullException("User can't be null", nameof(user));
-            Ingestion = new Ingestion();
-            Foodstuffs = GetAllFoodstuffs();
-            Ingestions = GetAllIngestions();
+            GetAllIngestions();
+            GetAllProducts();
         }
-        
+
         /// <summary>
-        /// Binary serialize foodstuffs and ingestions and save to files
+        /// Get ingestions to list of ingestions
         /// </summary>
+        public void GetAllIngestions()
+        {
+            using (WorkoutAppContext appContext = new WorkoutAppContext())
+            {
+                Ingestions = appContext.Ingestions.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Get products to list of products
+        /// </summary>
+        public void GetAllProducts()
+        {
+            using (WorkoutAppContext appContext = new WorkoutAppContext())
+            {
+                Products = appContext.Products.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Check product in DB by product name
+        /// </summary>
+        /// <param name="productName"></param>
         /// <returns>bool</returns>
-        private bool Save()
+        public bool CheckProductInBd(string productName)
         {
-            bool resultSaveFoodstuffs = Save<Foodstuff>(Foodstuffs);
-            bool resultSaveIngestions = Save<Ingestion>(Ingestions);
-            return resultSaveFoodstuffs && resultSaveIngestions;
+            Product = Products.SingleOrDefault(x => x.ProductName == productName);
+            if (Product == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
-        /// Load from file foodstuffs and deserialize
+        /// Add product into DB
         /// </summary>
-        /// <returns>List of foodstuffs</returns>
-        public List<Foodstuff> GetAllFoodstuffs()
+        /// <param name="productName"></param>
+        /// <param name="proteins"></param>
+        /// <param name="fats"></param>
+        /// <param name="carbohydrates"></param>
+        /// <param name="calories"></param>
+        public void AddProductToBd(string productName, double proteins, double fats, double carbohydrates, double calories)
         {
-            return LoadItems<Foodstuff>() ?? new List<Foodstuff>();
+            Product = new Product { ProductName = productName, Proteins = proteins, Fats = fats, Carbohydrates = carbohydrates, Calories = calories};
+            using (WorkoutAppContext appContext = new WorkoutAppContext())
+            {
+                appContext.Products.Add(Product);
+                appContext.SaveChanges();
+            }
+            GetAllProducts();
         }
 
         /// <summary>
-        /// Load from file ingestion and deserialize
+        /// Add ingestion into DB
         /// </summary>
-        /// <returns>Ingestion</returns>
-        public List<Ingestion> GetAllIngestions()
-        {
-            return LoadItems<Ingestion>();
-        }
-        
-        /// <summary>
-        /// Add foodstuff to ingestion
-        /// </summary>
-        /// <param name="inputFoodstuff"></param>
         /// <param name="weight"></param>
-        public void AddFoodstuff(Foodstuff inputFoodstuff, double weight)
+        public void AddIngestionToBd(double weight)
         {
-            Foodstuff foodstuff = null;
-            if (Foodstuffs.Count > 0)
+            using (WorkoutAppContext appContext = new WorkoutAppContext())
             {
-                foodstuff = Foodstuffs.SingleOrDefault(food => food.FoodstuffName.Equals(inputFoodstuff.FoodstuffName));
+                Ingestion ingestion = appContext.Ingestions.FirstOrDefault(x => x.ProductID == Product.ProductId);
+                if (ingestion == null)
+                {
+                    Product product = appContext.Products.SingleOrDefault(x => x.ProductName.Equals(Product.ProductName));
+                    ingestion = new Ingestion(product, weight);
+                    ingestion.UserID = user.UserID;
+                    appContext.Ingestions.Add(ingestion);
+                    appContext.SaveChanges();
+                }
+                else
+                {
+                    ingestion.Weight += weight;
+                    appContext.Update(ingestion);
+                    appContext.SaveChanges();
+                }
             }
-            if(foodstuff == null)
-            {
-                Foodstuffs.Add(inputFoodstuff);
-                Ingestion.AddFoods(inputFoodstuff, weight);
-                Save();
-                return;
-            }
-            Ingestion.AddFoods(foodstuff, weight);
-            Ingestions.Add(Ingestion);
-            Save();
+            GetAllIngestions();
+            GetAllProducts();
         }
     }
 }
